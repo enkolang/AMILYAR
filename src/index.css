@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/* Paperwhite theme overrides for pages still using dark utility classes */
+[data-theme="paperwhite"] .bg-slate-950,
+[data-theme="paperwhite"] .bg-slate-900,
+[data-theme="paperwhite"] .bg-slate-900\/50 {
+  background-color: #ffffff !important;
+}
+
+[data-theme="paperwhite"] .border-slate-800,
+[data-theme="paperwhite"] .border-slate-700 {
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="paperwhite"] .text-slate-500,
+[data-theme="paperwhite"] .text-slate-400,
+[data-theme="paperwhite"] .text-slate-300 {
+  color: #334155 !important;
+}
+
+[data-theme="paperwhite"] .hover\:bg-slate-800:hover {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="paperwhite"] input,
+[data-theme="paperwhite"] select,
+[data-theme="paperwhite"] textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="paperwhite"] input::placeholder,
+[data-theme="paperwhite"] textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Improve readability for calendar-style inputs in both themes. */
+input[type="date"],
+input[type="month"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="month"]::-webkit-datetime-edit {
+  color: #ffffff;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="month"]::-webkit-datetime-edit-year-field,
+input[type="month"]::-webkit-datetime-edit-month-field {
+  color: #ffffff;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+  filter: invert(1);
+}
+
+[data-theme="paperwhite"] input[type="date"],
+[data-theme="paperwhite"] input[type="month"] {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a;
+  color-scheme: light;
+}
+
+[data-theme="paperwhite"] input[type="date"]::-webkit-datetime-edit,
+[data-theme="paperwhite"] input[type="month"]::-webkit-datetime-edit,
+[data-theme="paperwhite"] input[type="date"]::-webkit-datetime-edit-year-field,
+[data-theme="paperwhite"] input[type="date"]::-webkit-datetime-edit-month-field,
+[data-theme="paperwhite"] input[type="date"]::-webkit-datetime-edit-day-field,
+[data-theme="paperwhite"] input[type="month"]::-webkit-datetime-edit-year-field,
+[data-theme="paperwhite"] input[type="month"]::-webkit-datetime-edit-month-field {
+  color: #0f172a;
+}
+
+[data-theme="paperwhite"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="paperwhite"] input[type="month"]::-webkit-calendar-picker-indicator {
+  opacity: 0.75;
+  filter: none;
+}
+
+[data-theme="paperwhite"] [data-tenant-status="inactive"] {
+  color: #64748b !important;
+  opacity: 0.55;
+}
+
+[data-theme="paperwhite"] .primary-action-btn {
+  background-color: #6366f1 !important;
+  color: #ffffff !important;
+  border-color: #6366f1 !important;
+}
+
+[data-theme="paperwhite"] .primary-action-btn:hover {
+  background-color: #4f46e5 !important;
+}
+
+[data-theme="paperwhite"] .tenant-active-action-edit {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="paperwhite"] .tenant-active-action-edit:hover {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="paperwhite"] .tenant-active-action-delete {
+  background-color: #ffffff !important;
+  border-color: #f43f5e !important;
+  color: #e11d48 !important;
+}
+
+[data-theme="paperwhite"] .tenant-active-action-delete:hover {
+  background-color: #fff1f2 !important;
+}
+
+[data-theme="paperwhite"] .collection-status-select.status-paid {
+  background-color: #ecfdf5 !important;
+  border-color: #16a34a !important;
+  color: #166534 !important;
+}
+
+[data-theme="paperwhite"] .collection-status-select.status-unpaid {
+  background-color: #fff1f2 !important;
+  border-color: #f43f5e !important;
+  color: #be123c !important;
+}
+
+[data-theme="paperwhite"] .collection-status-select.status-partial {
+  background-color: #fffbeb !important;
+  border-color: #f59e0b !important;
+  color: #b45309 !important;
+}
