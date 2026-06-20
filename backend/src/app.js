@@ -21,7 +21,24 @@ app.use(express.json({ limit: "200kb" }));
 app.get("/health", (_request, response) => {
   response.json({ ok: true });
 });
+app.get("/db-test", async (_req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({
+      connected: true,
+      server_time: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      connected: false,
+      error: error.message,
+    });
+  }
+});
 
 app.use("/api/tracking", rateLimit, trackingRouter);
 
 app.use(errorHandler);
+
+
+import { pool } from "./config/db.js";

@@ -111,6 +111,7 @@ export function PaymentsPage({ tenants, payments, setPayments, selectedYear, the
   const [selectedTenantId, setSelectedTenantId] = useState<string>("");
   const [selectedLeaseType, setSelectedLeaseType] = useState<TenantLeaseType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | "all">("all");
+  const [monthSortOrder, setMonthSortOrder] = useState<"asc" | "desc">("desc");
   const [generatorToast, setGeneratorToast] = useState<GeneratorToast | null>(null);
   const [editingPayment, setEditingPayment] = useState<PaymentRecord | null>(null);
   const [paymentEditForm, setPaymentEditForm] = useState<PaymentEditForm>({
@@ -173,7 +174,21 @@ export function PaymentsPage({ tenants, payments, setPayments, selectedYear, the
   }, [generatorToast]);
 
   const tenantById = useMemo(() => new Map(tenants.map((tenant) => [tenant.id, tenant])), [tenants]);
-
+  
+  const getLeaseTypeCode = (leaseType?: TenantLeaseType) => {
+  switch (leaseType) {
+    case "Lot":
+      return "L";
+    case "House":
+      return "H";
+    case "Parking Car":
+      return "PC";
+    case "Parking Motor":
+      return "PM";
+    default:
+      return "";
+  }
+};
   const generatorTenants = useMemo(() => {
     return generatorForm.leaseType ? tenants.filter((tenant) => tenant.leaseType === generatorForm.leaseType) : tenants;
   }, [generatorForm.leaseType, tenants]);
@@ -196,28 +211,29 @@ export function PaymentsPage({ tenants, payments, setPayments, selectedYear, the
     });
   }, [payments, selectedTenantId, selectedLeaseType, selectedYear, statusFilter, tenantById]);
 
-  const sortedPayments = useMemo(() => {
-    return [...filteredPayments].sort((left, right) => {
-      const leftTenantName = tenantById.get(left.tenantId)?.name ?? "";
-      const rightTenantName = tenantById.get(right.tenantId)?.name ?? "";
-      const tenantOrder = leftTenantName.localeCompare(rightTenantName, undefined, { sensitivity: "base" });
+const sortedPayments = useMemo(() => {
+  return [...filteredPayments].sort((left, right) => {
+    const leftMonthKey = Number(left.month.replace("-", ""));
+    const rightMonthKey = Number(right.month.replace("-", ""));
 
-      // Keep each tenant grouped together, then show newest covered month first.
-      if (tenantOrder !== 0) {
-        return tenantOrder;
-      }
+    // Sort by month first
+    if (leftMonthKey !== rightMonthKey) {
+      return monthSortOrder === "desc"
+        ? rightMonthKey - leftMonthKey
+        : leftMonthKey - rightMonthKey;
+    }
 
-      const [leftYear, leftMonth] = left.month.split("-").map(Number);
-      const [rightYear, rightMonth] = right.month.split("-").map(Number);
-      const leftMonthKey = leftYear * 100 + leftMonth;
-      const rightMonthKey = rightYear * 100 + rightMonth;
-      if (leftMonthKey !== rightMonthKey) {
-        return rightMonthKey - leftMonthKey;
-      }
+    // If same month, sort tenant names alphabetically
+    const leftTenantName = tenantById.get(left.tenantId)?.name ?? "";
+    const rightTenantName = tenantById.get(right.tenantId)?.name ?? "";
 
-      return right.id - left.id;
-    });
-  }, [filteredPayments, tenantById]);
+    return leftTenantName.localeCompare(
+      rightTenantName,
+      undefined,
+      { sensitivity: "base" }
+    );
+  });
+}, [filteredPayments, tenantById, monthSortOrder]);
 
   const createMonthRange = () => {
     const tenantId = Number(generatorForm.tenantId);
@@ -559,7 +575,20 @@ export function PaymentsPage({ tenants, payments, setPayments, selectedYear, the
           <thead className={collectionsHeadClass}>
             <tr>
               <th className="px-3 py-2">Tenant</th>
-              <th className="px-3 py-2">Month</th>
+              <th className="px-3 py-2">
+  <button
+    type="button"
+    onClick={() =>
+      setMonthSortOrder((prev) =>
+        prev === "desc" ? "asc" : "desc"
+      )
+    }
+    className="flex items-center gap-1 font-semibold"
+  >
+    Month
+    {monthSortOrder === "desc" ? " ↓" : " ↑"}
+  </button>
+</th>
               <th className="px-3 py-2">Amount</th>
               <th className="px-3 py-2">Payment Date</th>
               <th className="px-3 py-2">Reference No</th>
@@ -571,7 +600,15 @@ export function PaymentsPage({ tenants, payments, setPayments, selectedYear, the
           <tbody>
             {sortedPayments.map((payment) => (
               <tr key={payment.id} className={collectionsRowClass}>
-                <td className="px-3 py-2">{tenantById.get(payment.tenantId)?.name ?? "Unknown"}</td>
+<td className="px-3 py-2">
+  {(() => {
+    const tenant = tenantById.get(payment.tenantId);
+
+    if (!tenant) return "Unknown";
+
+    return `${tenant.name} - ${getLeaseTypeCode(tenant.leaseType)}`;
+  })()}
+</td>
                 <td className="px-3 py-2">{formatMonthLabel(payment.month)}</td>
                 <td className="px-3 py-2">{formatCurrency(payment.amount)}</td>
                 <td className="px-3 py-2">{formatDate(payment.paymentDate)}</td>
